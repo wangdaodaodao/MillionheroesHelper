@@ -14,6 +14,28 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.4399.400 QQBrowser/9.7.12777.400'
 }
 
+def search_1(work):
+    url = search_url.format(keywords=work.get('title'))
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, 'lxml')
+    answer = soup.select('.c-abstract')
+    answer1 = [x.text for x in answer]
+
+    x = 0
+    y = 0
+    z = 0
+    tt = {'an_1': x, 'an_2': y, 'an_3': z}
+    for a in answer1:
+        if work.get('A') in a:
+            tt['an_1'] += 1
+        elif work.get('B') in a:
+            tt['an_2'] += 1
+        elif work.get('C') in a:
+            tt['an_3'] += 1
+
+    tips = 'A出现次数为{}，B出现次数为{}，C出现次数为{}。\n建议你选最大值的选项！'.format(
+        tt['an_1'], tt['an_2'], tt['an_3'])
+    print(tips)
 
 
 def search_2(work):
