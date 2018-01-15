@@ -98,7 +98,6 @@ def search_1(work):
     if '出错' in work.get('title'):
         pass
     else:
-        tishi(work.get('title'))
         url = search_url_1.format(keywords=work.get('title'))
         response = requests.get(url, headers=headers)
         soup = BeautifulSoup(response.text, 'lxml')
@@ -124,7 +123,6 @@ def search_2(work):
     if '出错' in work.get('title'):
         pass
     else:
-        tishi(work.get('title'))
         for tt in [work.get('A'), work.get('B'), work.get('C')]:
             url = search_url_2.format(keywords=work.get('title') + tt)
             # print(url)
@@ -141,9 +139,9 @@ def search_2(work):
 jietu()
 
 try:
-    work = shibie()   
-    search_1(work)
-    
+    work = shibie() 
+    tishi(work.get('title'))
+    search_1(work)   
     search_2(work)
 except:
     print('!!!请在屏幕上出现题目和选项时运行程序!')
