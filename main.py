@@ -121,7 +121,12 @@ def search_2(work):
 
 
 get_img()
-work = shibie()
+
+try:
+    work = shibie()
+except：
+    print('识别错误，请在答题时候运行程序!')
+    
 # print('---------下方答来自百度搜索条目：------')
 search_1(work)
 print('---------下方答案，比较符合时政类型题目（来自百度新闻搜索）----------')
