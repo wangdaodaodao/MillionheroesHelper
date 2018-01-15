@@ -6,8 +6,7 @@ import time
 from bs4 import BeautifulSoup
 from aip import AipOcr
 from PIL import Image, ImageGrab
-from test import search_2
-
+from test import search_2 ,search_1
 t1 = time.time()
 
 search_url = 'https://www.baidu.com/s?wd={keywords}&pn=10&rn=50'
@@ -84,28 +83,6 @@ def shibie():
     return work
 
 
-def search_1(work):
-    url = search_url.format(keywords=work.get('title'))
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.text, 'lxml')
-    answer = soup.select('.c-abstract')
-    answer1 = [x.text for x in answer]
-
-    x = 0
-    y = 0
-    z = 0
-    tt = {'an_1': x, 'an_2': y, 'an_3': z}
-    for a in answer1:
-        if work.get('A') in a:
-            tt['an_1'] += 1
-        elif work.get('B') in a:
-            tt['an_2'] += 1
-        elif work.get('C') in a:
-            tt['an_3'] += 1
-
-    tips = 'A出现次数为{}，B出现次数为{}，C出现次数为{}。\n建议你选最大值的选项！'.format(
-        tt['an_1'], tt['an_2'], tt['an_3'])
-    print(tips)
 
 
 get_img()
