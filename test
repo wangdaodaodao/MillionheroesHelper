@@ -9,13 +9,16 @@ from aip import AipOcr
 from PIL import Image, ImageGrab
 
 
-search_url = 'http://news.baidu.com/ns?ct=1&rn=20&ie=utf-8&rsv_bp=1&sr=0&cl=2&f=8&prevct=no&tn=news&word={keywords}'
+search_url_2 = 'http://news.baidu.com/ns?ct=1&rn=20&ie=utf-8&rsv_bp=1&sr=0&cl=2&f=8&prevct=no&tn=news&word={keywords}'
+search_url_1 = 'https://www.baidu.com/s?wd={keywords}&pn=10&rn=50'
+
+
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.4399.400 QQBrowser/9.7.12777.400'
 }
 
 def search_1(work):
-    url = search_url.format(keywords=work.get('title'))
+    url = search_url_1.format(keywords=work.get('title'))
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, 'lxml')
     answer = soup.select('.c-abstract')
@@ -47,7 +50,7 @@ def search_2(work):
         print('*****此道题中含有"不,没有"， 所以注意选择^相反^的选项：')
 
     for tt in [work.get('A'), work.get('B'), work.get('C')]:
-        url = search_url.format(keywords=work.get('title') + tt)
+        url = search_url_2.format(keywords=work.get('title') + tt)
         # print(url)
         response = requests.get(url, headers=headers)
         soup = BeautifulSoup(response.text, 'lxml')
