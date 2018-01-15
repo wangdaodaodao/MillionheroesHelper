@@ -1,13 +1,6 @@
 # -*- coding: UTF-8 -*-
 
 import time
-
-import lxml
-import requests
-from aip import AipOcr
-from bs4 import BeautifulSoup# -*- coding: UTF-8 -*-
-
-import time
 import re
 
 import lxml
@@ -17,15 +10,14 @@ from bs4 import BeautifulSoup
 from PIL import Image, ImageGrab
 
 t1 = time.time()
-
+filePath_1 = 'screenshot.png'
+filePath_2 = 'cropped_img.png'
 search_url_2 = 'http://news.baidu.com/ns?ct=1&rn=20&ie=utf-8&rsv_bp=1&sr=0&cl=2&f=8&prevct=no&tn=news&word={keywords}'
 search_url_1 = 'https://www.baidu.com/s?wd={keywords}&pn=10&rn=50'
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.4399.400 QQBrowser/9.7.12777.400'
 }
 
-filePath_1 = 'screenshot.png'
-filePath_2 = 'cropped_img.png'
 
 # 先获得全屏截图，再根据窗口位置进行裁剪，获得待识别的图片
 def jietu():
@@ -105,12 +97,10 @@ def tishi(title):
 
 
 def search_1(work):
-
     url = search_url_1.format(keywords=work.get('title'))
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, 'lxml')
-    answer = [x.text for x in soup.select('.c-abstract')]
-    
+    answer = [x.text for x in soup.select('.c-abstract')]   
     counts = {'an_1': 0, 'an_2': 0, 'an_3': 0}
     for a in answer:        
         if work.get('A') in a:
@@ -136,8 +126,7 @@ def search_2(work):
     result = 'A:{},B:{},C:{}    --时政娱乐类题目考虑这个选项！'.format(counts[0], counts[1], counts[2])
     print(result)
 
-
-    
+ 
 jietu()
 try:
     work = shibie()
