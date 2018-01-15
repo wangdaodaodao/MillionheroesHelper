@@ -19,7 +19,7 @@ filePath1 = 'screenshot.png'
 filePath2 = 'cropped_img.png'
 
 # 先获得全屏截图，再根据窗口位置进行裁剪，获得待识别的图片
-def get_img():
+def jietu():
     im = ImageGrab.grab()
     im.save("screenshot.png")
     Image.open("screenshot.png")
@@ -81,7 +81,7 @@ def shibie():
     return work
 
 
-def tips(title):
+def tishi(title):
     if '没有' in title:
         print('***此道题中含有"没有"， 所以注意选择^相反^的选项')
     elif '不' in title:
@@ -91,7 +91,7 @@ def tips(title):
 
 
 def search_1(work):
-    tips(work.get('title'))
+    tishi(work.get('title'))
     url = search_url_1.format(keywords=work.get('title'))
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, 'lxml')
@@ -115,7 +115,7 @@ def search_1(work):
 
 def search_2(work):
     r = []
-    tips(work.get('title'))
+    tishi(work.get('title'))
     for tt in [work.get('A'), work.get('B'), work.get('C')]:
         url = search_url_2.format(keywords=work.get('title') + tt)
         # print(url)
@@ -129,7 +129,7 @@ def search_2(work):
 
 
 
-get_img()
+jietu()
 
 try:
     work = shibie()
