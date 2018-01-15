@@ -18,8 +18,7 @@ headers = {
 filePath1 = 'screenshot.png'
 filePath2 = 'cropped_img.png'
 
-
-# 先获得全屏截图，在裁剪，获得待识别的图片
+# 先获得全屏截图，再根据窗口位置进行裁剪，获得待识别的图片
 def get_img():
     im = ImageGrab.grab()
     im.save("screenshot.png")
@@ -31,11 +30,9 @@ def get_img():
     region.save('cropped_img.png')
     print('处理完图片共耗时{}'.format(time.time() - t1))
 
-
 def get_file_content(filePath):
     with open(filePath, 'rb') as fp:
         return fp.read()
-
 
 def shibie():
     #百度aip
@@ -112,7 +109,6 @@ def search_2(work):
         print('*****此道题中含有"不,没有"， 所以注意选择^相反^的选项：')
     elif '不' in work.get('title'):
         print('*****此道题中含有"不,没有"， 所以注意选择^相反^的选项：')
-
     for tt in [work.get('A'), work.get('B'), work.get('C')]:
         url = search_url_2.format(keywords=work.get('title') + tt)
         # print(url)
@@ -127,13 +123,12 @@ def search_2(work):
 get_img()
 work = shibie()
 # print('---------下方答来自百度搜索条目：------')
-
 search_1(work)
 print('---------下方答案，比较符合时政类型题目（来自百度新闻搜索）----------')
-
 search_2(work)
 print('---------需要综合比较，再选出答案----------')
-t2 = time.time()
-print('运行程序全部耗时{}'.format(t2 - t1))
+
+
+print('运行程序全部耗时{}'.format(time.time() - t1))
 
 
