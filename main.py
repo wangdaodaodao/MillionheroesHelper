@@ -28,25 +28,25 @@ def get_img():
     h = im.size[1]
     region = im.crop((40, 160, 260, 390))  # 裁剪的区域(分别是左间距，上间距，左间距+宽，上间距+高)
     region.save('cropped_img.png')
-    print('处理完图片共耗时{}'.format(time.time() - t1))
+    print('>>>处理完图片共耗时{}s'.format(time.time() - t1))
+
 
 def get_file_content(filePath):
     with open(filePath, 'rb') as fp:
         return fp.read()
 
+
 def shibie():
-    #百度aip
+    # 百度aip
     APP_ID = '****'
     API_KEY = '*************'
     SECRET_KEY = '*****************'
-
     aipOcr = AipOcr(APP_ID, API_KEY, SECRET_KEY)
     options = {
         'detect_direction': 'true',
         'language_type': 'CHN_ENG',
     }
     result = aipOcr.basicGeneral(get_file_content(filePath2), options)
-
     # 根据识别结果进行，拼接成题目等：
     if len(result.get('words_result')) == 5:
         title = result.get('words_result')[0].get(
@@ -81,7 +81,17 @@ def shibie():
     return work
 
 
+def tips(title):
+    if '没有' in title:
+        print('***此道题中含有"没有"， 所以注意选择^相反^的选项')
+    elif '不' in title:
+        print('***此道题中含有"不"， 所以注意选择^相反^的选项')
+    elif '以下' in title:
+        print('注意，题中可能有“比较”含义，注意分辨搜索答案！')
+
+
 def search_1(work):
+    tips(work.get('title'))
     url = search_url_1.format(keywords=work.get('title'))
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, 'lxml')
@@ -105,10 +115,7 @@ def search_1(work):
 
 def search_2(work):
     r = []
-    if '没有' in work.get('title'):
-        print('*****此道题中含有"不,没有"， 所以注意选择^相反^的选项：')
-    elif '不' in work.get('title'):
-        print('*****此道题中含有"不,没有"， 所以注意选择^相反^的选项：')
+    tips(work.get('title'))
     for tt in [work.get('A'), work.get('B'), work.get('C')]:
         url = search_url_2.format(keywords=work.get('title') + tt)
         # print(url)
@@ -120,20 +127,17 @@ def search_2(work):
     print(result)
 
 
+
+
 get_img()
 
 try:
     work = shibie()
-except：
-    print('识别错误，请在答题时候运行程序!')
-    
-# print('---------下方答来自百度搜索条目：------')
-search_1(work)
-print('---------下方答案，比较符合时政类型题目（来自百度新闻搜索）----------')
-search_2(work)
-print('---------需要综合比较，再选出答案----------')
+    print('---------下方答来自百度搜索条目：------')
+    search_1(work)
+    print('----下方答案来自百度新闻搜索（政类型题目参考）----')
+    search_2(work)
+except:
+    print('!!!请在屏幕上出现题目和选项时运行程序!')
 
-
-print('运行程序全部耗时{}'.format(time.time() - t1))
-
-
+print('>>>运行程序全部耗时{}s'.format(time.time() - t1))
