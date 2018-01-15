@@ -1,10 +1,11 @@
 # -*- coding: UTF-8 -*-
 
-import requests
-import lxml
 import time
-from bs4 import BeautifulSoup
+
+import lxml
+import requests
 from aip import AipOcr
+from bs4 import BeautifulSoup
 from PIL import Image, ImageGrab
 
 t1 = time.time()
@@ -26,9 +27,9 @@ def jietu():
     img_size = im.size
     w = im.size[0]
     h = im.size[1]
-    region = im.crop((40, 160, 260, 390))  # 裁剪的区域(分别是左间距，上间距，左间距+宽，上间距+高)
+    region = im.crop((40, 160, 270, 390))  # 裁剪的区域(分别是左间距，上间距，左间距+宽，上间距+高)
     region.save(filePath_2)
-    print('>>>处理完图片共耗时{:.3f}秒'.format(time.time() - t1))
+    print('>>>处理完图片共耗时{:.3f}秒\n'.format(time.time() - t1))
 
 
 def get_file_content(filePath):
@@ -38,9 +39,9 @@ def get_file_content(filePath):
 
 def shibie():
     # 百度aip
-    APP_ID = '****'
-    API_KEY = '*************'
-    SECRET_KEY = '*****************'
+    APP_ID = ' '
+    API_KEY = ' '
+    SECRET_KEY = ' '
     aipOcr = AipOcr(APP_ID, API_KEY, SECRET_KEY)
     options = {
         'detect_direction': 'true',
@@ -66,12 +67,13 @@ def shibie():
         an_2 = result.get('words_result')[2].get('words')
         an_3 = result.get('words_result')[3].get('words')
     else:
-        title = '遗憾告诉您出错啦，原因可能是：'
-        an_1 = '1.屏幕上还未出现题目和选项；'
-        an_2 = '2.选项中出现了数字和公式等；'
-        an_3 = '3.题目超过了3行或者是其他某种原因；'
-    print(title[2:])
-    print('A:' + an_1, '\n', 'B:' + an_2, '\n', 'C:' + an_3, '\n', )
+        title = '^^^遗憾告诉您出错啦，原因可能是：'
+        an_1 = '屏幕上还未出现题目和选项；'
+        an_2 = '选项中出现了数字或者公式等；'
+        an_3 = '题目超过了3行或者是其他某种原因；'
+    print(title if '出错' in title else '题目：{}'.format(title[2: ]))
+    print(' A:' + an_1, '\n', 'B:' + an_2, '\n', 'C:' + an_3 )
+
     work = {
         'title': title,
         'A': an_1,
@@ -86,45 +88,52 @@ def tishi(title):
         print('***此道题中含有"没有"， 所以注意选择^相反^的选项')
     elif '不' in title:
         print('***此道题中含有"不"， 所以注意选择^相反^的选项')
+    elif '未' in title:
+        print('***此道题中含有"未"， 所以注意选择^相反^的选项')
     elif '以下' in title:
-        print('注意，题中可能有“比较”含义，注意分辨搜索答案！')
+        print('***注意，题中可能有“比较”含义，注意分辨搜索答案！')
 
 
 def search_1(work):
-    tishi(work.get('title'))
-    url = search_url_1.format(keywords=work.get('title'))
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.text, 'lxml')
-    answer = soup.select('.c-abstract')
-    answer1 = [x.text for x in answer]
-    x = 0
-    y = 0
-    z = 0
-    tt = {'an_1': x, 'an_2': y, 'an_3': z}
-    for a in answer1:
-        if work.get('A') in a:
-            tt['an_1'] += 1
-        elif work.get('B') in a:
-            tt['an_2'] += 1
-        elif work.get('C') in a:
-            tt['an_3'] += 1
-    tips = 'A出现次数为{}，B出现次数为{}，C出现次数为{}。\n建议你选最大值的选项！'.format(
-        tt['an_1'], tt['an_2'], tt['an_3'])
-    print(tips)
+    if '出错' in work.get('title'):
+        pass
+    else:
+        tishi(work.get('title'))
+        url = search_url_1.format(keywords=work.get('title'))
+        response = requests.get(url, headers=headers)
+        soup = BeautifulSoup(response.text, 'lxml')
+        answer = [x.text for x in soup.select('.c-abstract')]
+        x = 0
+        y = 0
+        z = 0
+        tt = {'an_1': x, 'an_2': y, 'an_3': z}
+        for a in answer:
+            if work.get('A') in a:
+                tt['an_1'] += 1
+            elif work.get('B') in a:
+                tt['an_2'] += 1
+            elif work.get('C') in a:
+                tt['an_3'] += 1
+        tips = 'A:出现次数为{}，B:出现次数为{}，C:出现次数为{}。   --建议你选最大值的选项！'.format(
+            tt['an_1'], tt['an_2'], tt['an_3'])
+        print(tips)
 
 
 def search_2(work):
     r = []
-    tishi(work.get('title'))
-    for tt in [work.get('A'), work.get('B'), work.get('C')]:
-        url = search_url_2.format(keywords=work.get('title') + tt)
-        # print(url)
-        response = requests.get(url, headers=headers)
-        soup = BeautifulSoup(response.text, 'lxml')
-        answer = soup.select('.nums')[0]
-        r.append(answer.text)
-    result = 'A:{},\nB:{},\nC:{},\n'.format(r[0], r[1], r[2])
-    print(result)
+    if '出错' in work.get('title'):
+        pass
+    else:
+        tishi(work.get('title'))
+        for tt in [work.get('A'), work.get('B'), work.get('C')]:
+            url = search_url_2.format(keywords=work.get('title') + tt)
+            # print(url)
+            response = requests.get(url, headers=headers)
+            soup = BeautifulSoup(response.text, 'lxml')
+            answer = soup.select('.nums')[0]
+            r.append(answer.text)
+        result = 'A:{},B:{},C:{}    --时政类题目考虑这个选项！'.format(r[0], r[1], r[2])
+        print(result)
 
 
 
@@ -132,12 +141,11 @@ def search_2(work):
 jietu()
 
 try:
-    work = shibie()
-    print('---------下方答来自百度搜索条目：------')
+    work = shibie()   
     search_1(work)
-    print('----下方答案来自百度新闻搜索（政类型题目参考）----')
+    
     search_2(work)
 except:
     print('!!!请在屏幕上出现题目和选项时运行程序!')
 
-print('>>>运行程序全部耗时{:.3f}秒'.format(time.time() - t1))
+print('\n>>>运行程序全部耗时{:.3f}秒'.format(time.time() - t1))
