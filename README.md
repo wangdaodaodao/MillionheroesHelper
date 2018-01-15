@@ -1,4 +1,4 @@
-# MillionHero
+# MillionHerosHelper
  
 百万英雄答题辅助
 
