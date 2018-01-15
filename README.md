@@ -13,4 +13,7 @@
        
 提示:    
 #必须等屏幕上出现题目时运行程序，否则会识别不到题目和选项而报错;    
-#需要根据需要自行修改截图参数
+#需要根据需要自行修改截图参数     
+    
+    
+![Image text](https://raw.githubusercontent.com/wangdaodao7/MillionherosHelper/master/%E7%A4%BA%E4%BE%8B.png)
