@@ -15,20 +15,20 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.4399.400 QQBrowser/9.7.12777.400'
 }
 
-filePath1 = 'screenshot.png'
-filePath2 = 'cropped_img.png'
+filePath_1 = 'screenshot.png'
+filePath_2 = 'cropped_img.png'
 
 # 先获得全屏截图，再根据窗口位置进行裁剪，获得待识别的图片
 def jietu():
     im = ImageGrab.grab()
-    im.save("screenshot.png")
-    Image.open("screenshot.png")
+    im.save(filePath_1)
+    Image.open(filePath_1)
     img_size = im.size
     w = im.size[0]
     h = im.size[1]
     region = im.crop((40, 160, 260, 390))  # 裁剪的区域(分别是左间距，上间距，左间距+宽，上间距+高)
-    region.save('cropped_img.png')
-    print('>>>处理完图片共耗时{}s'.format(time.time() - t1))
+    region.save(filePath_2)
+    print('>>>处理完图片共耗时{:.3f}秒'.format(time.time() - t1))
 
 
 def get_file_content(filePath):
@@ -46,7 +46,7 @@ def shibie():
         'detect_direction': 'true',
         'language_type': 'CHN_ENG',
     }
-    result = aipOcr.basicGeneral(get_file_content(filePath2), options)
+    result = aipOcr.basicGeneral(get_file_content(filePath_2), options)
     # 根据识别结果进行，拼接成题目等：
     if len(result.get('words_result')) == 5:
         title = result.get('words_result')[0].get(
@@ -140,4 +140,4 @@ try:
 except:
     print('!!!请在屏幕上出现题目和选项时运行程序!')
 
-print('>>>运行程序全部耗时{}s'.format(time.time() - t1))
+print('>>>运行程序全部耗时{:.3f}秒'.format(time.time() - t1))
