@@ -27,7 +27,7 @@ def jietu():
     img_size = im.size
     w = im.size[0]
     h = im.size[1]
-    region = im.crop((40, 160, 270, 390))  # 裁剪的区域(分别是左间距，上间距，左间距+宽，上间距+高)
+    region = im.crop((40, 170, 270, 400))  # 裁剪的区域(分别是左间距，上间距，左间距+宽，上间距+高)
     region.save(filePath_2)
     print('>>>处理完图片共耗时{:.3f}秒\n'.format(time.time() - t1))
 
@@ -39,9 +39,9 @@ def get_file_content(filePath):
 
 def shibie():
     # 百度aip
-    APP_ID = ' '
-    API_KEY = ' '
-    SECRET_KEY = ' '
+    APP_ID = ''
+    API_KEY = ''
+    SECRET_KEY = ''
     aipOcr = AipOcr(APP_ID, API_KEY, SECRET_KEY)
     options = {
         'detect_direction': 'true',
@@ -71,8 +71,8 @@ def shibie():
         an_1 = '屏幕上还未出现题目和选项；'
         an_2 = '选项中出现了数字或者公式等；'
         an_3 = '题目超过了3行或者是其他某种原因；'
-    print(title if '出错' in title else '题目：{}'.format(title[2: ]))
-    print(' A:' + an_1, '\n', 'B:' + an_2, '\n', 'C:' + an_3 )
+    print(title if '出错' in title else '题目：{}'.format(title.split('.')[-1]))
+    print(' A:' + an_1, '\n', 'B:' + an_2, '\n', 'C:' + an_3 , '\n' )
 
     work = {
         'title': title,
@@ -84,14 +84,19 @@ def shibie():
 
 
 def tishi(title):
-    if '没有' in title:
-        print('***此道题中含有"没有"， 所以注意选择^相反^的选项')
-    elif '不' in title:
-        print('***此道题中含有"不"， 所以注意选择^相反^的选项')
-    elif '未' in title:
-        print('***此道题中含有"未"， 所以注意选择^相反^的选项')
-    elif '以下' in title:
-        print('***注意，题中可能有“比较”含义，注意分辨搜索答案！')
+    if '出错' not in title:
+        if '没有' in title:
+            print('***此道题中含有"没有"， 选择^较少^的选项***')
+        elif '不' in title:
+            print('***此道题中含有"不"， 选择^较少^的选项***')
+        elif '未' in title:
+            print('***此道题中含有"未"， 选择^较少^的选项***')
+        elif '以下' in title:
+            print('***注意，题中可能有"比较"含义，注意分辨答案***')
+        else:
+            print('***正常题目，选择^较多^的选项***')
+    else:
+        pass
 
 
 def search_1(work):
@@ -113,7 +118,7 @@ def search_1(work):
                 tt['an_2'] += 1
             elif work.get('C') in a:
                 tt['an_3'] += 1
-        tips = 'A:出现次数为{}，B:出现次数为{}，C:出现次数为{}。   --建议你选最大值的选项！'.format(
+        tips = 'A:出现次数为{}，B:出现次数为{}，C:出现次数为{}'.format(
             tt['an_1'], tt['an_2'], tt['an_3'])
         print(tips)
 
@@ -130,7 +135,7 @@ def search_2(work):
             soup = BeautifulSoup(response.text, 'lxml')
             answer = soup.select('.nums')[0]
             r.append(answer.text)
-        result = 'A:{},B:{},C:{}    --时政类题目考虑这个选项！'.format(r[0], r[1], r[2])
+        result = 'A:{},B:{},C:{}    --时政娱乐类题目考虑这个选项！'.format(r[0], r[1], r[2])
         print(result)
 
 
@@ -139,9 +144,9 @@ def search_2(work):
 jietu()
 
 try:
-    work = shibie() 
-    tishi(work.get('title'))
-    search_1(work)   
+    work = shibie()
+    tishi(work.get('title'))   
+    search_1(work)
     search_2(work)
 except:
     print('!!!请在屏幕上出现题目和选项时运行程序!')
