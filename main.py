@@ -9,10 +9,6 @@ from PIL import Image, ImageGrab
 from test import search_2 ,search_1
 t1 = time.time()
 
-search_url = 'https://www.baidu.com/s?wd={keywords}&pn=10&rn=50'
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.4399.400 QQBrowser/9.7.12777.400'
-}
 
 filePath1 = 'screenshot.png'
 filePath2 = 'cropped_img.png'
