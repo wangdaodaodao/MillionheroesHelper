@@ -66,10 +66,10 @@ def shibie():
         an_2 = result.get('words_result')[2].get('words')
         an_3 = result.get('words_result')[3].get('words')
     else:
-        title = '遗憾告诉您：'
-        an_1 = '识别错误'
-        an_2 = '识别错误'
-        an_3 = '识别错误'
+        title = '遗憾告诉您出错啦，原因可能是：'
+        an_1 = '1.屏幕上还未出现题目和选项；'
+        an_2 = '2.选项中出现了数字和公式等；'
+        an_3 = '3.题目超过了3行或者是其他某种原因；'
     print(title[2:])
     print('A:' + an_1, '\n', 'B:' + an_2, '\n', 'C:' + an_3, '\n', )
     work = {
