@@ -107,10 +107,7 @@ def search_1(work):
         response = requests.get(url, headers=headers)
         soup = BeautifulSoup(response.text, 'lxml')
         answer = [x.text for x in soup.select('.c-abstract')]
-        x = 0
-        y = 0
-        z = 0
-        tt = {'an_1': x, 'an_2': y, 'an_3': z}
+        tt = {'an_1': 0, 'an_2': 0, 'an_3': 0}
         for a in answer:
             if work.get('A') in a:
                 tt['an_1'] += 1
