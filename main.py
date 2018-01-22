@@ -38,7 +38,7 @@ def get_file_content(filePath):
 
 
 def shibie():
-    # 百度aip
+    # 根据百度aip的api进行识别
     APP_ID = '*******'
     API_KEY = '***********'
     SECRET_KEY = '*************'
